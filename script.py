@@ -3,22 +3,28 @@ import sys
 import json
 import os
 
-def write_to_pddl( problem_name, init_state, goal_state, block_number ):
+def write_to_pddl( problem_name, objects, init_state, goal_state, block_number ):
     # print(problem_name)
     with open('problem_template.pddl', 'r') as f:
         lines = f.readlines()
         for l in range(len(lines)):
             if '(problem' in lines[l]:
                 problem_line = l
+            if '(:objects' in lines[l]:
+                objects_line = l
             if '(:init' in lines[l]:
                 initial_line = l+1
 
     lines[problem_line] = '(define (problem '+problem_name+')\n'
+    lines[objects_line] = '(:objects '+objects+')\n'
     lines.insert( initial_line, init_state )
     for l in range(len(lines)):
         if '(:goal' in lines[l]:
             goal_line = l+2
     lines.insert( goal_line, goal_state)
+
+    if os.path.exists('problem_files/') == False:
+        os.mkdir('problem_files/')
 
     if os.path.exists('problem_files/'+str(block_number)+'/') == False:
         os.mkdir('problem_files/'+str(block_number)+'/')
@@ -108,7 +114,7 @@ def generate_init_goal_states( init, goal):
         if (item+1) not in goal:
             goal_items.append('(clear '+objects[item]+')')
 
-    return '\n'.join(init_items), '\n'.join(goal_items)
+    return ' '.join(objects), '\n'.join(init_items), '\n'.join(goal_items)
 
 
 def generate_state_combinations( list_of_states,block_number ):
@@ -119,8 +125,8 @@ def generate_state_combinations( list_of_states,block_number ):
         for j in list_of_states:
             if i != j:
                 counter += 1
-                init_string, goal_string = generate_init_goal_states(i,j)
-                write_to_pddl(name+str(counter), init_string, goal_string, block_number)
+                objects, init_string, goal_string = generate_init_goal_states(i,j)
+                write_to_pddl(name+str(counter), objects, init_string, goal_string, block_number)
 
     print('problem file count = ', counter)
 
