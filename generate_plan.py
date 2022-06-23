@@ -33,7 +33,6 @@ if len(sys.argv) > 1:
 
 			execute_planner( current_path, planner_path, plan_file, domain_file, problem_file)
 
-			break
 
 	
 	# print(current_path,planner_path)
