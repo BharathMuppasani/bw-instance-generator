@@ -9,3 +9,7 @@ All the generated problem files are saved to folder problem_files/<blocks_number
 
 2. Generates problem files for blocksworld environment consisting of 4 blocks
   >python script.py --only 4 
+
+To generate plans for the all the problem files, use generate_plans.py. This script takes in Fast-Downward Planner path as a command line argument to generate plans.
+**Example:**
+  >python3 generate_plans.py <\planner_path>
