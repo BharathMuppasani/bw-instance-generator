@@ -10,6 +10,7 @@ def execute_planner( current_path, planner_path, plan, domain, problem  ):
 	command_str = f'./fast-downward.py --plan-file {plan} {domain} {problem} --search "astar(ff())"'
 	os.system(command_str)
 	print("Generated ",plan.split('/')[-1])
+	os.chdir(current_path)
 
 if len(sys.argv) > 1:
 	planner_path = sys.argv[1]
@@ -17,14 +18,14 @@ if len(sys.argv) > 1:
 	current_path = os.getcwd()
 	domain_file = current_path + '/domain.pddl'
 	problem_files = current_path + '/problem_files/'
-	
+	plans_folder = current_path+'/plans/'
+
+
 	for d in os.listdir(problem_files):
 		block_dir = os.path.join(problem_files, d)
 		
 		if os.path.exists(block_dir+'/plans/') == False:
 			os.mkdir(block_dir+'/plans/')
-			
-		plans_folder = block_dir+'/plans/'
 
 		for problem_file in glob.iglob(block_dir + '/**/*.pddl', recursive=True):
 			name = problem_file.split('/')[-1].replace('problem','plan').replace('.pddl','.txt')
